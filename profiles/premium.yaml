@@ -1,0 +1,37 @@
+schema_version: 1
+id: premium
+name: Премиум
+tagline: Всё из Стандарта + локальный AI + домашний Netflix + Google Photos + NVR
+order: 3
+color: "#7F77DD"
+icon: "🟣"
+description: |
+  Полный пакет для **digital-first семьи**:
+  - всё из «Стандарта» (защита + VPN + облако + автоматизация)
+  - локальный ChatGPT без подписки (Ollama + Open WebUI с Llama/DeepSeek/Qwen)
+  - домашний Netflix (Jellyfin — фильмы, музыка, фото)
+  - локальный Google Photos с AI распознаванием (Immich)
+  - видеонаблюдение с AI распознаванием человек/машина/лицо (Frigate)
+
+  **Требования**: только мощный x86 неттоп с 16+ GB RAM (MSI Cubi 5 идеально).
+  Все тяжёлые сервисы (ML inference) — на CPU/iGPU.
+
+  Альтернатива подпискам на 3000-5000 ₽/мес.
+
+services:
+  - adguardhome
+  - vaultwarden
+  - uptime-kuma
+  - 3x-ui
+  - amneziawg
+  - nextcloud
+  - n8n
+  - ollama
+  - jellyfin
+  - immich
+  - frigate
+
+pricing_hint_rub: 8000
+target_audience: "Семьи которые хотят максимум — AI, медиа, фото, охрана"
+estimated_ram_mb: 18000
+estimated_disk_gb: 250

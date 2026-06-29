@@ -1,0 +1,31 @@
+schema_version: 1
+id: standard
+name: Стандарт
+tagline: Базовый + VPN с обходом РКН + автоматизация + облачное хранилище
+order: 2
+color: "#378ADD"
+icon: "🔵"
+description: |
+  Расширенный пакет для активных пользователей:
+  - всё из «Базового» (AdGuard, Vaultwarden, Uptime Kuma)
+  - VPN с обходом блокировок РКН (3X-UI Reality)
+  - резервный VPN AmneziaWG
+  - облачное хранилище для семьи (Nextcloud — Dropbox дома)
+  - no-code автоматизация (n8n)
+
+  Подходит для x86 неттопов (Cubi 5 и подобные). Pi 5 тоже потянет
+  кроме Nextcloud.
+
+services:
+  - adguardhome
+  - vaultwarden
+  - uptime-kuma
+  - 3x-ui
+  - amneziawg
+  - nextcloud
+  - n8n
+
+pricing_hint_rub: 3500
+target_audience: "Активные пользователи — VPN, облачные сервисы, автоматизация"
+estimated_ram_mb: 6500
+estimated_disk_gb: 60

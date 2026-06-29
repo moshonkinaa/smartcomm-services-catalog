@@ -1,0 +1,22 @@
+schema_version: 1
+id: basic
+name: Базовый
+tagline: Стартовый набор — защита, пароли, мониторинг
+order: 1
+color: "#1D9E75"
+icon: "🟢"
+description: |
+  Минимально-необходимый набор для безопасности и защиты дома:
+  блок рекламы, менеджер паролей семьи, мониторинг доступности.
+
+  Подходит для Pi 5 и любых неттопов. Низкая нагрузка (всего ~600 MB RAM).
+
+services:
+  - adguardhome
+  - vaultwarden
+  - uptime-kuma
+
+pricing_hint_rub: 1000
+target_audience: "Семьи в загородных домах — базовая защита"
+estimated_ram_mb: 600
+estimated_disk_gb: 4
