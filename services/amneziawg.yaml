@@ -31,7 +31,6 @@ features:
   - Минимальный overhead — почти как чистый WireGuard
   - Идёт парой с 3X-UI как резервный канал
 
-pricing_hint_rub: 500
 web_url: "http://{CONTROLLER}:51821"
 docs_url: https://docs.amnezia.org/documentation/amnezia-wg/
 

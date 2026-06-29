@@ -36,7 +36,6 @@ features:
   - Talk — видео/аудио звонки с шифрованием
   - File sharing с правами и сроком жизни ссылок
 
-pricing_hint_rub: 800
 web_url: "https://{CONTROLLER}:8080"
 docs_url: https://nextcloud.com/all-in-one/
 

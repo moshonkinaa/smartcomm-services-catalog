@@ -37,7 +37,6 @@ features:
   - OpenAI-совместимый API — можно подключить из других приложений
   - Intel iGPU acceleration (через `--device=/dev/dri`)
 
-pricing_hint_rub: 2000
 web_url: "http://{CONTROLLER}:3000"
 docs_url: https://docs.openwebui.com/
 

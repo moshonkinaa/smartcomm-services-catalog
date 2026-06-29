@@ -16,7 +16,6 @@ services:
   - vaultwarden
   - uptime-kuma
 
-pricing_hint_rub: 1000
 target_audience: "Семьи в загородных домах — базовая защита"
 estimated_ram_mb: 600
 estimated_disk_gb: 4

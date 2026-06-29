@@ -25,7 +25,6 @@ services:
   - nextcloud
   - n8n
 
-pricing_hint_rub: 3500
 target_audience: "Активные пользователи — VPN, облачные сервисы, автоматизация"
 estimated_ram_mb: 6500
 estimated_disk_gb: 60

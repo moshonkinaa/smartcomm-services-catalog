@@ -31,7 +31,6 @@ services:
   - immich
   - frigate
 
-pricing_hint_rub: 8000
 target_audience: "Семьи которые хотят максимум — AI, медиа, фото, охрана"
 estimated_ram_mb: 18000
 estimated_disk_gb: 250

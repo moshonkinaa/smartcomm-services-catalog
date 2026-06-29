@@ -39,7 +39,6 @@ features:
   - Web UI с timeline и поиском по событиям
   - Mobile apps (Frigate Cards для HA) + альтернативные
 
-pricing_hint_rub: 1500
 web_url: "http://{CONTROLLER}:5000"
 docs_url: https://docs.frigate.video/
 

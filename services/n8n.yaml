@@ -43,7 +43,6 @@ features:
   - "AI nodes: OpenAI, Claude, Ollama, HuggingFace"
   - Self-hosted = данные не покидают контроллер
 
-pricing_hint_rub: 600
 web_url: "http://{CONTROLLER}:5678"
 docs_url: https://docs.n8n.io/
 

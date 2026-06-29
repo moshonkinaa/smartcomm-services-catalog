@@ -35,7 +35,6 @@ features:
   - Per-client настройки (детский iPad — строгий фильтр, родительский Mac — мягкий)
   - "Время-зависимые правила («после 23:00 блокировать Тинькофф-Инвестиции»)"
 
-pricing_hint_rub: 300
 web_url: "http://{CONTROLLER}:3000"
 docs_url: https://github.com/AdguardTeam/AdGuardHome/wiki
 
