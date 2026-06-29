@@ -32,8 +32,8 @@ description: |
   - На Cubi 5 — встроенный Coral TPU не нужен, iGPU справляется
 
 features:
-  - Реальное-время AI: люди, машины, велосипеды, животные, лица
-  - Smart events: «человек у ворот» vs «человек в зоне сада»
+  - "Реальное-время AI: люди, машины, велосипеды, животные, лица"
+  - "Smart events: «человек у ворот» vs «человек в зоне сада»"
   - Recording 24/7 + smart-events highlights
   - HomeKit, MQTT, REST API, RTSP relay
   - Web UI с timeline и поиском по событиям

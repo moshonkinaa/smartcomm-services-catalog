@@ -40,7 +40,7 @@ features:
   - 400+ интеграций из коробки + custom JavaScript
   - Webhook receiver — принимать события от других сервисов
   - Scheduled triggers (cron-like) + manual triggers
-  - AI nodes: OpenAI, Claude, Ollama, HuggingFace
+  - "AI nodes: OpenAI, Claude, Ollama, HuggingFace"
   - Self-hosted = данные не покидают контроллер
 
 pricing_hint_rub: 600

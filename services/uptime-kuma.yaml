@@ -28,7 +28,7 @@ description: |
   - Бесплатная альтернатива UptimeRobot (5 проверок) / Datadog ($15+/мес)
 
 features:
-  - 10+ типов проверок: HTTP, HTTPS, TCP, Ping, DNS, Docker, Push, Steam, Kafka
+  - "10+ типов проверок: HTTP, HTTPS, TCP, Ping, DNS, Docker, Push, Steam, Kafka"
   - 90+ типов уведомлений (Telegram, Email, Slack, etc.)
   - Status page (публичный или приватный) — можно поделиться с клиентом
   - Maintenance windows (запланированные простои не считаются)
