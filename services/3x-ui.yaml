@@ -33,6 +33,7 @@ features:
   - Совместим с клиентами V2rayN / V2rayNG / Streisand
 
 pricing_hint_rub: 1000
+web_url: "http://{CONTROLLER}:2053"
 docs_url: https://github.com/MHSanaei/3x-ui
 
 post_install: |

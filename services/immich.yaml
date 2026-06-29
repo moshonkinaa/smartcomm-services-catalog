@@ -35,6 +35,7 @@ features:
   - Хранение оригиналов (включая RAW)
 
 pricing_hint_rub: 800
+web_url: "http://{CONTROLLER}:2283"
 docs_url: https://immich.app/docs/overview/quick-start
 
 post_install: |

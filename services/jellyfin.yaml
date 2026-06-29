@@ -35,6 +35,7 @@ features:
   - Multi-user с правами родительского контроля
 
 pricing_hint_rub: 600
+web_url: "http://{CONTROLLER}:8096"
 docs_url: https://jellyfin.org/docs/
 
 post_install: |

@@ -36,6 +36,7 @@ features:
   - User management (RBAC) если несколько админов
 
 pricing_hint_rub: 0          # инструмент админа, не продаётся клиенту
+web_url: "https://{CONTROLLER}:9443"
 docs_url: https://docs.portainer.io/
 
 post_install: |

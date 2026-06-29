@@ -37,6 +37,7 @@ features:
   - Привязка к domain (HTTPS обязателен для биометрии iOS/Android)
 
 pricing_hint_rub: 400
+web_url: "http://{CONTROLLER}:8222"
 docs_url: https://github.com/dani-garcia/vaultwarden/wiki
 
 post_install: |
