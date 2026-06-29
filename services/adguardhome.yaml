@@ -1,0 +1,66 @@
+schema_version: 1
+id: adguardhome
+name: AdGuard Home
+tagline: Блок рекламы во всей сети — на Smart TV, телефонах, ПК
+category: security
+icon: shield-block
+client_facing: true
+suspicious: false
+
+requirements:
+  min_ram_mb: 256
+  min_disk_gb: 2
+  platforms: [x86_64, arm64]
+  cpu_cores: 1
+  needs_internet: true
+  needs_ports: [3000, 53]
+  optional_ports: [80, 443, 853]
+
+description: |
+  Сетевой DNS-фильтр — блокирует рекламу, трекеры, malware на уровне DNS
+  для всех устройств в сети. Работает там где обычный AdBlock не поставить
+  (Smart TV, IoT-устройства, приложения с встроенной рекламой).
+
+  **Зачем в 2026**:
+  - Реклама на YouTube Smart TV (где плагины не поставить)
+  - Детский фильтр: блок porn / казино / гэмблинг на уровне DNS
+  - Статистика: «за день заблочено 12 тыс рекламных запросов»
+  - AdGuard.ru подписка = 200 ₽/мес × количество устройств. Дома — бесплатно
+  - Параллельный DNS-cache → страницы открываются быстрее
+
+features:
+  - 50+ готовых блок-листов (русские, английские, родительские)
+  - Custom правила (можно блочить специфичные домены вручную)
+  - DNS-over-HTTPS / DNS-over-TLS → DNS-трафик зашифрован от провайдера
+  - Per-client настройки (детский iPad — строгий фильтр, родительский Mac — мягкий)
+  - Время-зависимые правила («после 23:00 блокировать Тинькофф-Инвестиции»)
+
+pricing_hint_rub: 300
+docs_url: https://github.com/AdguardTeam/AdGuardHome/wiki
+
+post_install: |
+  1. Открой http://CONTROLLER:3000
+  2. Setup wizard → Admin interface на :80 (или :3000), DNS на :53
+  3. Создай админа
+  4. На роутере MikroTik: IP → DHCP Server → Networks → DNS Servers = CONTROLLER IP
+  5. Обнови lease у клиентских устройств (отключить-подключить WiFi)
+  6. Через 5 минут проверь Query Log — пошёл трафик
+
+compose: |
+  services:
+    adguardhome:
+      image: adguard/adguardhome:latest
+      container_name: adguardhome
+      restart: unless-stopped
+      ports:
+        - "53:53/tcp"
+        - "53:53/udp"
+        - "3000:3000/tcp"        # initial setup
+        - "80:80/tcp"            # admin interface after setup
+        - "443:443/tcp"          # для DoH
+        - "853:853/tcp"          # для DoT
+      volumes:
+        - "{DATA}/work:/opt/adguardhome/work"
+        - "{DATA}/conf:/opt/adguardhome/conf"
+      environment:
+        - "TZ=Europe/Moscow"

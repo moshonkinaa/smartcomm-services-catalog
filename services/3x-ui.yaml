@@ -1,0 +1,58 @@
+schema_version: 1
+id: 3x-ui
+name: 3X-UI (Reality VPN)
+tagline: VPN с обходом блокировок РФ (Reality протокол)
+category: vpn
+icon: shield-check
+client_facing: true
+suspicious: true
+
+requirements:
+  min_ram_mb: 256
+  min_disk_gb: 2
+  platforms: [x86_64, arm64]
+  cpu_cores: 1
+  needs_internet: true
+  needs_ports: [2053, 443]
+  optional_ports: []
+
+description: |
+  Панель управления VPN-сервером с протоколом VLESS + Reality. Reality маскирует
+  трафик под TLS-handshake к настоящему сайту (например `youtube.com`) — DPI
+  глубокой инспекции пакетов РКН не отличает его от обычного HTTPS.
+
+  Работает там где WireGuard и OpenVPN заблокированы (большие города РФ
+  с 2024-2025). Поддерживает многих пользователей, лимиты трафика,
+  IP-фильтры, генерацию QR-кодов для клиентов.
+
+features:
+  - Reality протокол — не блокируется DPI РКН
+  - Поддержка нескольких пользователей (семья + гости)
+  - QR-коды для подключения с iOS/Android в 1 клик
+  - Веб-панель с трафик-статистикой
+  - Совместим с клиентами V2rayN / V2rayNG / Streisand
+
+pricing_hint_rub: 1000
+docs_url: https://github.com/MHSanaei/3x-ui
+
+post_install: |
+  1. Открой http://CONTROLLER:2053 (порт может быть другой — см. логи)
+  2. Логин/пароль по умолчанию: admin/admin → СРАЗУ смени
+  3. Меню «Inbounds» → «+ Add Inbound» → Type: vless → Settings: reality
+  4. Сгенерируй пользователей → раздай QR-коды семье
+  5. На роутере пробросить порт 443 на CONTROLLER:443
+  6. Скачать клиент на iOS/Android: Streisand / Foxray / V2rayNG
+
+compose: |
+  services:
+    3xui:
+      image: ghcr.io/mhsanaei/3x-ui:latest
+      container_name: 3x-ui
+      restart: unless-stopped
+      network_mode: host
+      volumes:
+        - "{DATA}/db:/etc/x-ui"
+        - "{DATA}/cert:/root/cert"
+      environment:
+        - "XRAY_VMESS_AEAD_FORCED=false"
+        - "TZ=Europe/Moscow"

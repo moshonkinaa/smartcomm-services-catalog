@@ -1,0 +1,65 @@
+schema_version: 1
+id: vaultwarden
+name: Vaultwarden
+tagline: Менеджер паролей семьи (Bitwarden self-hosted)
+category: security
+icon: key
+client_facing: true
+suspicious: false
+
+requirements:
+  min_ram_mb: 128
+  min_disk_gb: 1
+  platforms: [x86_64, arm64]
+  cpu_cores: 1
+  needs_internet: false
+  needs_ports: [8222]
+  optional_ports: []
+
+description: |
+  Self-hosted сервер Bitwarden (написан на Rust, лёгкий). Совместим со
+  всеми официальными Bitwarden-клиентами: iOS, Android, Chrome, Firefox,
+  Safari, Edge, Windows, macOS, CLI.
+
+  **Зачем в 2026**:
+  - 1Password Family = ~$60/год, Bitwarden Premium Family = $40/год
+  - У клиента — бесплатно навсегда, данные дома, не у LastPass (взломали 3 раза с 2020 по 2023)
+  - Семейный шеринг: «вот WiFi от дачи», «вот Netflix аккаунт мамы»
+  - 2FA-коды (как Authy / Google Authenticator) — синхронизируются между всеми устройствами
+  - Хранение паспортов, банковских карт, лицензионных ключей, безопасных заметок
+
+features:
+  - 100% Bitwarden API совместимость → официальные приложения работают
+  - Биометрическая разблокировка (Face ID / Touch ID)
+  - Авто-заполнение паролей в браузерах и приложениях
+  - 2FA TOTP (без отдельного приложения типа Authy)
+  - Семейные/Organization vaults с правами доступа
+  - Привязка к domain (HTTPS обязателен для биометрии iOS/Android)
+
+pricing_hint_rub: 400
+docs_url: https://github.com/dani-garcia/vaultwarden/wiki
+
+post_install: |
+  1. Открой http://CONTROLLER:8222
+  2. Создай аккаунт (первый пользователь — админ)
+  3. Чтобы открыть для семьи: Settings → Admin → Domain (через Nginx Proxy Manager)
+  4. Скачай Bitwarden Mobile в App Store / Google Play
+  5. Settings → Self-hosted → Server URL: https://YOUR_DOMAIN (или http://CONTROLLER:8222)
+  6. Войди под своим аккаунтом → начни импортировать пароли (LastPass/1Password/CSV)
+
+compose: |
+  services:
+    vaultwarden:
+      image: vaultwarden/server:latest
+      container_name: vaultwarden
+      restart: unless-stopped
+      ports:
+        - "8222:80"
+      volumes:
+        - "{DATA}/data:/data"
+      environment:
+        - "DOMAIN=http://CONTROLLER:8222"
+        - "SIGNUPS_ALLOWED=true"          # после регистрации семьи → false для безопасности
+        - "SHOW_PASSWORD_HINT=false"
+        - "TZ=Europe/Moscow"
+        - "WEBSOCKET_ENABLED=true"

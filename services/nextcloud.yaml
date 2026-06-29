@@ -1,0 +1,70 @@
+schema_version: 1
+id: nextcloud
+name: Nextcloud AIO
+tagline: Dropbox + Google Drive + Office дома, без подписок
+category: cloud
+icon: cloud
+client_facing: true
+suspicious: false
+
+requirements:
+  min_ram_mb: 4096
+  min_disk_gb: 50
+  platforms: [x86_64]
+  cpu_cores: 2
+  needs_internet: false
+  needs_ports: [8080, 11000]
+  optional_ports: [3478]
+
+description: |
+  Полная замена Dropbox / Google Drive / OneDrive с приложениями для всех
+  платформ. Включает календарь, контакты, ONLYOFFICE (open-source Microsoft
+  Office), Talk (видеозвонки), Mail-клиент, заметки.
+
+  **Зачем в 2026**:
+  - Семейный обмен файлами без облаков (Dropbox 2TB = $12/мес)
+  - Google Drive Family = $10/мес × несколько лет = много
+  - Календарь синхронизируется с iPhone, Android, Outlook (CalDAV/CardDAV)
+  - ONLYOFFICE — открыть/редактировать .docx в браузере как Google Docs
+  - Talk — альтернатива Zoom/WhatsApp для семейных видеозвонков
+
+features:
+  - Apps для всех платформ (iOS, Android, Win, Mac, Linux)
+  - Sync клиент с автозагрузкой фото с телефонов
+  - Календарь / Контакты — CalDAV/CardDAV (работает с встроенными приложениями iPhone/Android)
+  - ONLYOFFICE — редактирование документов в браузере
+  - Talk — видео/аудио звонки с шифрованием
+  - File sharing с правами и сроком жизни ссылок
+
+pricing_hint_rub: 800
+docs_url: https://nextcloud.com/all-in-one/
+
+post_install: |
+  1. Открой https://CONTROLLER:8080 (HTTPS обязательно)
+  2. Запиши «AIO Master Password» — это пароль для управления стэком
+  3. Введи свой домен (или CONTROLLER если без публичного доступа)
+  4. Запусти контейнеры через AIO интерфейс
+  5. Дождись окончания установки (5-15 мин)
+  6. Открой https://CONTROLLER:11000 — это уже Nextcloud
+  7. Скачай Nextcloud Mobile / Desktop клиенты
+
+compose: |
+  services:
+    nextcloud-aio-mastercontainer:
+      image: nextcloud/all-in-one:latest
+      container_name: nextcloud-aio-mastercontainer
+      restart: always
+      ports:
+        - "8080:8080"
+      volumes:
+        - "nextcloud_aio_mastercontainer:/mnt/docker-aio-config"
+        - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      environment:
+        - "AIO_DISABLE_BACKUP_SECTION=false"
+        - "APACHE_PORT=11000"
+        - "APACHE_IP_BINDING=0.0.0.0"
+        - "TZ=Europe/Moscow"
+
+  volumes:
+    nextcloud_aio_mastercontainer:
+      name: nextcloud_aio_mastercontainer

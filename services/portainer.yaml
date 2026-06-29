@@ -1,0 +1,60 @@
+schema_version: 1
+id: portainer
+name: Portainer
+tagline: GUI для Docker — админский инструмент инсталлятора
+category: admin
+icon: terminal
+client_facing: false        # клиент не видит, только админ
+suspicious: false
+
+requirements:
+  min_ram_mb: 256
+  min_disk_gb: 1
+  platforms: [x86_64, arm64]
+  cpu_cores: 1
+  needs_internet: false
+  needs_ports: [9000, 9443]
+  optional_ports: []
+
+description: |
+  Веб-GUI для управления Docker. **Не для клиента — для инсталлятора.**
+  Если SmartComm Dashboard упал, Portainer — запасной парашют чтобы
+  посмотреть статус контейнеров, логи, перезапустить упавший сервис.
+
+  **Зачем в 2026 (для инсталлятора)**:
+  - Если SmartComm dashboard сломался → через Portainer можно дебажить руками
+  - Просмотр логов контейнеров в реальном времени
+  - Стэки (Compose) с visual editor
+  - Image management (pull новых версий, чистка старых)
+  - Backup/restore стэков и volumes
+
+features:
+  - Real-time stats всех контейнеров
+  - Логи в реальном времени с фильтрами
+  - Управление volumes (создание, удаление, бэкап)
+  - Compose-stack editor с диффами
+  - User management (RBAC) если несколько админов
+
+pricing_hint_rub: 0          # инструмент админа, не продаётся клиенту
+docs_url: https://docs.portainer.io/
+
+post_install: |
+  1. Открой https://CONTROLLER:9443 (HTTPS обязательно для login)
+  2. Создай админ-аккаунт (первые 5 минут после старта, потом lockout)
+  3. Local environment → Connect → автоматически подцепится Docker socket
+  4. Containers / Stacks → видишь все сервисы
+
+compose: |
+  services:
+    portainer:
+      image: portainer/portainer-ce:latest
+      container_name: portainer
+      restart: unless-stopped
+      ports:
+        - "9000:9000"
+        - "9443:9443"
+      volumes:
+        - "/var/run/docker.sock:/var/run/docker.sock"
+        - "{DATA}/data:/data"
+      environment:
+        - "TZ=Europe/Moscow"

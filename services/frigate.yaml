@@ -1,0 +1,79 @@
+schema_version: 1
+id: frigate
+name: Frigate NVR
+tagline: Видеонаблюдение с AI-распознаванием (человек, машина, лицо)
+category: smart-home
+icon: video
+client_facing: true
+suspicious: false
+
+requirements:
+  min_ram_mb: 4096
+  min_disk_gb: 100
+  platforms: [x86_64]      # Pi тянет 1-2 камеры, но reliably только Cubi
+  cpu_cores: 4
+  needs_internet: false
+  needs_ports: [5000, 8554, 8555]
+  optional_ports: []
+
+description: |
+  NVR (Network Video Recorder) для IP-камер с AI-распознаванием объектов
+  через TensorFlow Lite. Не пишет тонны видео где «ветка качается» —
+  пишет только когда детектировано важное (человек / машина / животное /
+  лицо / номер машины через LPR-plugin).
+
+  **Зачем в 2026**:
+  - Уведомления в Telegram: «У ворот человек 17:42» с фото
+  - HomeKit интеграция (если клиент в экосистеме Apple)
+  - MQTT интеграция → можно завязать с iRidium:
+    «если Frigate detected person → включить свет на крыльце через iRidium-сценарий»
+  - Распознавание номеров машин (LPR plugin) → «приехал муж/жена/доставка»
+  - Hardware-ускорение Intel iGPU (Cubi 5) → 4-8 камер в реальном времени без нагрузки
+  - На Cubi 5 — встроенный Coral TPU не нужен, iGPU справляется
+
+features:
+  - Реальное-время AI: люди, машины, велосипеды, животные, лица
+  - Smart events: «человек у ворот» vs «человек в зоне сада»
+  - Recording 24/7 + smart-events highlights
+  - HomeKit, MQTT, REST API, RTSP relay
+  - Web UI с timeline и поиском по событиям
+  - Mobile apps (Frigate Cards для HA) + альтернативные
+
+pricing_hint_rub: 1500
+docs_url: https://docs.frigate.video/
+
+post_install: |
+  1. Открой http://CONTROLLER:5000
+  2. **Сначала добавь IP-камеры в `/var/lib/smartcomm-services/frigate/config/config.yml`**:
+     указать RTSP URL каждой камеры, FPS, разрешение для детекции
+  3. Перезапусти сервис → камеры появятся в UI
+  4. Настрой zones (зоны интереса) — например «крыльцо», «парковка»
+  5. Подключи MQTT (можно поднять Mosquitto тут же) — для алертов
+  6. Интеграция с Telegram: через n8n + webhook от Frigate
+
+compose: |
+  services:
+    frigate:
+      image: ghcr.io/blakeblackshear/frigate:stable
+      container_name: frigate
+      restart: unless-stopped
+      privileged: true        # для USB Coral если будет
+      shm_size: "256mb"
+      volumes:
+        - "{DATA}/config:/config"
+        - "{DATA}/storage:/media/frigate"
+        - type: tmpfs
+          target: /tmp/cache
+          tmpfs:
+            size: 1000000000
+      ports:
+        - "5000:5000"           # web UI
+        - "8554:8554"           # RTSP relay
+        - "8555:8555/tcp"       # WebRTC
+        - "8555:8555/udp"
+      # Intel iGPU acceleration (Cubi 5):
+      # devices:
+      #   - "/dev/dri/renderD128:/dev/dri/renderD128"
+      environment:
+        - "TZ=Europe/Moscow"
+        - "FRIGATE_RTSP_PASSWORD=password"   # СМЕНИТЬ

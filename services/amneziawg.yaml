@@ -1,0 +1,64 @@
+schema_version: 1
+id: amneziawg
+name: AmneziaWG
+tagline: VPN от российского комьюнити (форк WireGuard с обходом DPI)
+category: vpn
+icon: shield-alt
+client_facing: true
+suspicious: true
+
+requirements:
+  min_ram_mb: 64
+  min_disk_gb: 1
+  platforms: [x86_64, arm64]
+  cpu_cores: 1
+  needs_internet: true
+  needs_ports: [51820]
+  optional_ports: []
+
+description: |
+  Российский форк WireGuard от команды Amnezia. Добавляет fake-junk-пакеты
+  в начало WireGuard handshake — DPI не распознаёт его как WG и не блокирует.
+
+  Open-source, проверенный, активно поддерживаемый. Идеальный **резервный**
+  VPN на случай если основной (3X-UI Reality) заблокируют. Очень лёгкий —
+  работает даже на Pi с минимальным оверхедом.
+
+features:
+  - Маскировка handshake под мусорный трафик — DPI не блочит
+  - Сделан **в РФ для РФ** — команда Amnezia.org
+  - Клиенты в App Store / Google Play / Windows / Mac / Linux
+  - Минимальный overhead — почти как чистый WireGuard
+  - Идёт парой с 3X-UI как резервный канал
+
+pricing_hint_rub: 500
+docs_url: https://docs.amnezia.org/documentation/amnezia-wg/
+
+post_install: |
+  1. Открой http://CONTROLLER:51821 (Web UI)
+  2. Создай клиентов через WireGuard Easy интерфейс
+  3. Скачай конфиги (.conf) или QR-коды
+  4. Установи приложение Amnezia (App Store / Google Play / amnezia.org)
+  5. Импортируй конфиг → подключайся
+  6. На роутере пробросить UDP/51820
+
+compose: |
+  services:
+    amneziawg:
+      image: docker.amnezia.org/amneziawg-easy:latest
+      container_name: amneziawg
+      restart: unless-stopped
+      ports:
+        - "51820:51820/udp"
+        - "51821:51821/tcp"
+      volumes:
+        - "{DATA}/config:/etc/wireguard"
+      cap_add:
+        - NET_ADMIN
+        - SYS_MODULE
+      sysctls:
+        - net.ipv4.conf.all.src_valid_mark=1
+        - net.ipv4.ip_forward=1
+      environment:
+        - "TZ=Europe/Moscow"
+        - "PASSWORD_HASH=$$2a$$12$$REPLACE_WITH_BCRYPT"

@@ -1,0 +1,67 @@
+schema_version: 1
+id: jellyfin
+name: Jellyfin
+tagline: Netflix дома — стриминг на любое устройство, без подписки
+category: media
+icon: film
+client_facing: true
+suspicious: false
+
+requirements:
+  min_ram_mb: 2048
+  min_disk_gb: 50
+  platforms: [x86_64]      # Pi тянет, но hardware-decoding слабый — лучше Cubi
+  cpu_cores: 2
+  needs_internet: false
+  needs_ports: [8096]
+  optional_ports: [8920, 7359, 1900]
+
+description: |
+  Self-hosted медиа-сервер — Netflix-style стриминг фильмов, сериалов,
+  музыки, фото. Приложения для всех платформ: Smart TV (Samsung Tizen,
+  LG webOS, Android TV, Apple TV, Roku), iPhone, iPad, Android, ноутбук.
+
+  **Зачем в 2026**:
+  - Окко/Кинопоиск/IVI/Wink — 600-1000 ₽/мес × сколько подписок
+  - Клиент собирает свою коллекцию: купленные DVD/Blu-ray, домашнее видео
+  - Hardware-декодирование Intel QuickSync на Cubi 5 → 4K без буферизации
+  - Дети смотрят мультфильмы офлайн на даче
+
+features:
+  - Hardware-декодирование Intel QSV (Cubi) → 4K HDR без лагов
+  - Auto-обновление метаданных (постеры, описания, рейтинги)
+  - Транскодирование на лету (4K → 1080p для слабых клиентов)
+  - DLNA / Chromecast / AirPlay
+  - Multi-user с правами родительского контроля
+
+pricing_hint_rub: 600
+docs_url: https://jellyfin.org/docs/
+
+post_install: |
+  1. Открой http://CONTROLLER:8096
+  2. Создай админ-аккаунт + пользователей семьи
+  3. Add library → выбери папку с фильмами (например `/media/Movies`)
+  4. Скачай Jellyfin Mobile / Jellyfin Media Player на устройства
+  5. Server URL: http://CONTROLLER:8096
+
+compose: |
+  services:
+    jellyfin:
+      image: jellyfin/jellyfin:10.10
+      container_name: jellyfin
+      restart: unless-stopped
+      ports:
+        - "8096:8096"
+        - "8920:8920"
+        - "7359:7359/udp"
+        - "1900:1900/udp"
+      volumes:
+        - "{DATA}/config:/config"
+        - "{DATA}/cache:/cache"
+        - "{MEDIA}:/media:ro"
+      # Intel QuickSync hardware acceleration (Cubi 5):
+      # devices: ["/dev/dri:/dev/dri"]
+      # group_add: ["render", "video"]
+      environment:
+        - "TZ=Europe/Moscow"
+        - "JELLYFIN_PublishedServerUrl=http://CONTROLLER"

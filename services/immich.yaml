@@ -1,0 +1,86 @@
+schema_version: 1
+id: immich
+name: Immich
+tagline: Google Photos дома — с AI распознаванием лиц и мест
+category: photo
+icon: image
+client_facing: true
+suspicious: false
+
+requirements:
+  min_ram_mb: 4096
+  min_disk_gb: 100
+  platforms: [x86_64]      # ARM работает, но машинное обучение медленнее
+  cpu_cores: 4
+  needs_internet: false
+  needs_ports: [2283]
+  optional_ports: []
+
+description: |
+  Self-hosted Google Photos. Автозагрузка с iPhone/Android, AI распознавание
+  лиц, мест и объектов, поиск по фото («покажи фотки с котом»).
+
+  **Зачем в 2026**:
+  - Семья снимает 1000+ фото в месяц, на телефонах кончается место
+  - iCloud 200GB = 199 ₽/мес × количество членов семьи
+  - Google Photos больше не бесплатный (15GB лимит, потом покупай)
+  - **Распознавание лиц локально** — ни Apple, ни Google не получают
+  - Делай альбомы «отпуск 2024» → показывай гостям через Chromecast
+
+features:
+  - Apps для iOS и Android — автозагрузка как у Google Photos
+  - AI: лица, локации, объекты, текст на фото (OCR)
+  - Семейные альбомы с правами доступа
+  - Внешние библиотеки (read-only из NAS/папок)
+  - Хранение оригиналов (включая RAW)
+
+pricing_hint_rub: 800
+docs_url: https://immich.app/docs/overview/quick-start
+
+post_install: |
+  1. Открой http://CONTROLLER:2283
+  2. Создай админ-аккаунт + аккаунты семьи
+  3. Скачай Immich Mobile в App Store / Google Play
+  4. Server URL: http://CONTROLLER:2283
+  5. Включи Auto Backup в приложении
+  6. Подожди пока пройдёт ML-обработка (раз в день)
+
+compose: |
+  services:
+    immich-server:
+      image: ghcr.io/immich-app/immich-server:release
+      container_name: immich-server
+      restart: unless-stopped
+      ports:
+        - "2283:2283"
+      volumes:
+        - "{DATA}/upload:/usr/src/app/upload"
+        - "/etc/localtime:/etc/localtime:ro"
+      environment:
+        - "DB_HOSTNAME=immich-postgres"
+        - "DB_USERNAME=immich"
+        - "DB_PASSWORD=immich"
+        - "DB_DATABASE_NAME=immich"
+        - "REDIS_HOSTNAME=immich-redis"
+        - "TZ=Europe/Moscow"
+      depends_on: [immich-redis, immich-postgres]
+    immich-machine-learning:
+      image: ghcr.io/immich-app/immich-machine-learning:release
+      container_name: immich-ml
+      restart: unless-stopped
+      volumes:
+        - "{DATA}/model-cache:/cache"
+    immich-redis:
+      image: redis:6.2-alpine
+      container_name: immich-redis
+      restart: unless-stopped
+    immich-postgres:
+      image: tensorchord/pgvecto-rs:pg14-v0.2.0
+      container_name: immich-postgres
+      restart: unless-stopped
+      volumes:
+        - "{DATA}/pgdata:/var/lib/postgresql/data"
+      environment:
+        - "POSTGRES_PASSWORD=immich"
+        - "POSTGRES_USER=immich"
+        - "POSTGRES_DB=immich"

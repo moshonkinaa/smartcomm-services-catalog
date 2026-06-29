@@ -1,0 +1,80 @@
+schema_version: 1
+id: ollama
+name: Ollama + Open WebUI
+tagline: Локальный ChatGPT — приватный, без подписки, без VPN
+category: ai
+icon: brain
+client_facing: true
+suspicious: false
+
+requirements:
+  min_ram_mb: 5120        # 4GB модель + 1GB overhead на WebUI
+  min_disk_gb: 30         # пара моделей + кэш
+  platforms: [x86_64]      # Pi 5 потянет 1-2B модели, но опыт слабый — не показываем
+  cpu_cores: 4
+  needs_internet: true     # для скачивания моделей; работа потом offline
+  needs_ports: [3000, 11434]
+  optional_ports: []
+
+description: |
+  Локальный ChatGPT в браузере. Поддерживает топовые модели 2025-2026:
+  Llama 3.x (8B / 70B), Qwen 2.5, DeepSeek R1 (reasoning), Mistral.
+  Веб-интерфейс выглядит как chat.openai.com — поддерживает картинки,
+  загрузку документов (RAG), голосовой ввод.
+
+  **Зачем это клиенту в 2026**:
+  - ChatGPT/Claude недоступны в РФ без VPN
+  - ChatGPT Plus = $20/мес, Pro = $200/мес — у клиента бесплатно навсегда
+  - Приватность 100% — переписки не уходят в OpenAI/Anthropic/Google
+  - Помогает с уроками, переводами, программированием, документами
+  - На Cubi 5 (Core 5 120U) **DeepSeek-R1 8B** работает ~10 токенов/сек
+
+features:
+  - Llama 3.x, Qwen 2.5, DeepSeek R1, Mistral, Gemma
+  - Документы → AI (RAG, поиск по PDF/Word/MD)
+  - Голосовой ввод и Text-to-Speech
+  - Sharing chats внутри семьи
+  - OpenAI-совместимый API — можно подключить из других приложений
+  - Intel iGPU acceleration (через `--device=/dev/dri`)
+
+pricing_hint_rub: 2000
+docs_url: https://docs.openwebui.com/
+
+post_install: |
+  1. Открой http://CONTROLLER:3000 — это Open WebUI
+  2. Создай админ-аккаунт (первый юзер автоматически админ)
+  3. Settings → Models → Pull a model from Ollama:
+     - `llama3.1:8b` (8GB, 4.5GB на диске) — универсальная
+     - `qwen2.5:7b` (4.4GB) — хорошая по русскому
+     - `deepseek-r1:8b` (4.7GB) — reasoning, для сложных задач
+  4. Возвращайся в чат → выбери модель → пиши
+  5. Первый запрос медленный (загрузка в RAM), дальше быстрее
+
+compose: |
+  services:
+    ollama:
+      image: ollama/ollama:latest
+      container_name: ollama
+      restart: unless-stopped
+      ports:
+        - "11434:11434"
+      volumes:
+        - "{DATA}/ollama:/root/.ollama"
+      environment:
+        - "OLLAMA_KEEP_ALIVE=5m"
+        - "TZ=Europe/Moscow"
+      # Intel iGPU acceleration (Cubi 5):
+      # devices: ["/dev/dri:/dev/dri"]
+    open-webui:
+      image: ghcr.io/open-webui/open-webui:main
+      container_name: open-webui
+      restart: unless-stopped
+      depends_on: [ollama]
+      ports:
+        - "3000:8080"
+      volumes:
+        - "{DATA}/webui:/app/backend/data"
+      environment:
+        - "OLLAMA_BASE_URL=http://ollama:11434"
+        - "WEBUI_AUTH=true"
+        - "TZ=Europe/Moscow"

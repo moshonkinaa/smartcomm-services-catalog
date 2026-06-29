@@ -1,0 +1,76 @@
+schema_version: 1
+id: n8n
+name: n8n
+tagline: No-code автоматизация (Zapier дома + AI workflows)
+category: automation
+icon: workflow
+client_facing: true
+suspicious: false
+
+requirements:
+  min_ram_mb: 1024
+  min_disk_gb: 5
+  platforms: [x86_64, arm64]
+  cpu_cores: 2
+  needs_internet: true
+  needs_ports: [5678]
+  optional_ports: []
+
+description: |
+  Open-source конкурент Zapier и Make.com. Drag-and-drop workflows с
+  400+ готовыми интеграциями: Telegram, Email, Webhook, MQTT, HTTP,
+  PostgreSQL, OpenAI, Claude, Ollama, Google Sheets, AWS, и т.д.
+
+  **Зачем в 2026 — реальные сценарии**:
+  - «Frigate detected human at door → Telegram-уведомление → попросить Ollama
+    описать → если "курьер" → открыть калитку через iRidium API»
+  - «Каждое утро 8:00 → получить погоду → составить summary через Ollama →
+    отправить в семейный Telegram-чат»
+  - «Когда мама уезжает за город (geolocation) → iRidium в режим охраны →
+    подтверждение ей в WhatsApp»
+  - «Каждую ночь резервная копия БД SmartComm → Google Drive»
+
+  **Vs альтернативы**:
+  - Zapier — $30+/мес, требует cloud-доступа
+  - Make.com — то же
+  - n8n — бесплатно, локально, без лимитов
+
+features:
+  - Visual workflow editor (drag-and-drop)
+  - 400+ интеграций из коробки + custom JavaScript
+  - Webhook receiver — принимать события от других сервисов
+  - Scheduled triggers (cron-like) + manual triggers
+  - AI nodes: OpenAI, Claude, Ollama, HuggingFace
+  - Self-hosted = данные не покидают контроллер
+
+pricing_hint_rub: 600
+docs_url: https://docs.n8n.io/
+
+post_install: |
+  1. Открой http://CONTROLLER:5678
+  2. Создай админ-аккаунт
+  3. Settings → Credentials → добавь нужные сервисы:
+     - Telegram Bot (создать через @BotFather)
+     - Ollama (URL http://ollama:11434 если установлен)
+     - SMTP для email
+     - MikroTik REST API
+  4. Workflows → New → начни с примера из «Templates»
+
+compose: |
+  services:
+    n8n:
+      image: n8nio/n8n:latest
+      container_name: n8n
+      restart: unless-stopped
+      ports:
+        - "5678:5678"
+      volumes:
+        - "{DATA}/data:/home/node/.n8n"
+      environment:
+        - "N8N_HOST=CONTROLLER"
+        - "N8N_PORT=5678"
+        - "N8N_PROTOCOL=http"
+        - "WEBHOOK_URL=http://CONTROLLER:5678/"
+        - "GENERIC_TIMEZONE=Europe/Moscow"
+        - "TZ=Europe/Moscow"
+        - "N8N_SECURE_COOKIE=false"
