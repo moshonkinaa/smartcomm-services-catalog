@@ -59,6 +59,10 @@ compose: |
       restart: unless-stopped
       privileged: true        # для USB Coral если будет
       shm_size: "256mb"
+      # 4G — Frigate с 4-8 камерами Full HD + AI detection обычно ест 1-3 GB.
+      # Лимит защищает от runaway recording loop когда диск кончается.
+      mem_limit: 4g
+      mem_reservation: 512m
       volumes:
         - "{DATA}/config:/config"
         - "{DATA}/storage:/media/frigate"

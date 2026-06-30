@@ -51,6 +51,10 @@ compose: |
       image: ghcr.io/immich-app/immich-server:release
       container_name: immich-server
       restart: unless-stopped
+      # Memory limit: server обычно ест 400-1500 MB. 4G hard cap — защита
+      # от runaway uploads / batch jobs которые могли утянуть весь хост.
+      mem_limit: 4g
+      mem_reservation: 512m
       ports:
         - "2283:2283"
       volumes:
@@ -68,15 +72,21 @@ compose: |
       image: ghcr.io/immich-app/immich-machine-learning:release
       container_name: immich-ml
       restart: unless-stopped
+      # ML — самый прожорливый. Лимит 3G чтобы не съел всё при batch-обработке
+      # большой коллекции (распознавание лиц + объектов).
+      mem_limit: 3g
+      mem_reservation: 512m
       volumes:
         - "{DATA}/model-cache:/cache"
     immich-redis:
       image: redis:6.2-alpine
       container_name: immich-redis
       restart: unless-stopped
+      mem_limit: 256m
     immich-postgres:
       image: tensorchord/pgvecto-rs:pg14-v0.2.0
       container_name: immich-postgres
+      mem_limit: 1g
       restart: unless-stopped
       volumes:
         - "{DATA}/pgdata:/var/lib/postgresql/data"

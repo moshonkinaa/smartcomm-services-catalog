@@ -56,6 +56,11 @@ compose: |
       image: ollama/ollama:latest
       container_name: ollama
       restart: unless-stopped
+      # 8G — комфортно для 7-8B моделей (Llama 3.1 8B, Qwen 2.5 7B, DeepSeek-R1 8B).
+      # Для 13B моделей увеличь до 16g (но Cubi с 16GB всего — потянет только если
+      # другие тяжёлые сервисы остановлены).
+      mem_limit: 8g
+      mem_reservation: 1g
       ports:
         - "11434:11434"
       volumes:
@@ -70,6 +75,9 @@ compose: |
       container_name: open-webui
       restart: unless-stopped
       depends_on: [ollama]
+      # 1.5G — WebUI на FastAPI, обычно ест 500-900 MB при активных пользователях
+      mem_limit: 1500m
+      mem_reservation: 256m
       ports:
         - "3030:8080"   # :3000 занят AdGuard initial-setup
       volumes:
