@@ -6,6 +6,7 @@ category: security
 icon: shield-block
 client_facing: true
 suspicious: false
+# v3.0: changelog подтягивается с GitHub Releases этого репоimage_origin:  github: AdguardTeam/AdGuardHome
 
 requirements:
   min_ram_mb: 256

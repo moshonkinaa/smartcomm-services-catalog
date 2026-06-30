@@ -6,6 +6,7 @@ category: media
 icon: film
 client_facing: true
 suspicious: false
+# v3.0: changelog подтягивается с GitHub Releases этого репоimage_origin:  github: jellyfin/jellyfin
 
 requirements:
   min_ram_mb: 2048

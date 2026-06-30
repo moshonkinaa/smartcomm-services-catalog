@@ -6,6 +6,7 @@ category: security
 icon: key
 client_facing: true
 suspicious: false
+# v3.0: changelog подтягивается с GitHub Releases этого репоimage_origin:  github: dani-garcia/vaultwarden
 
 requirements:
   min_ram_mb: 128

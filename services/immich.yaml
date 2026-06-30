@@ -7,6 +7,10 @@ icon: image
 client_facing: true
 suspicious: false
 
+# v3.0: changelog подтягивается с GitHub Releases этого репо
+image_origin:
+  github: immich-app/immich
+
 requirements:
   min_ram_mb: 4096
   min_disk_gb: 100

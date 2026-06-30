@@ -6,6 +6,7 @@ category: automation
 icon: workflow
 client_facing: true
 suspicious: false
+# v3.0: changelog подтягивается с GitHub Releases этого репоimage_origin:  github: n8n-io/n8n
 
 requirements:
   min_ram_mb: 1024

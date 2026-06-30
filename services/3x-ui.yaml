@@ -6,6 +6,7 @@ category: vpn
 icon: shield-check
 client_facing: true
 suspicious: true
+# v3.0: changelog подтягивается с GitHub Releases этого репоimage_origin:  github: MHSanaei/3x-ui
 
 requirements:
   min_ram_mb: 256

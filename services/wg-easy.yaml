@@ -6,6 +6,7 @@ category: vpn
 icon: shield-alt
 client_facing: true
 suspicious: true
+# v3.0: changelog подтягивается с GitHub Releases этого репоimage_origin:  github: wg-easy/wg-easy
 
 requirements:
   min_ram_mb: 128

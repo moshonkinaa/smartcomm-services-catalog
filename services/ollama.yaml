@@ -6,6 +6,7 @@ category: ai
 icon: brain
 client_facing: true
 suspicious: false
+# v3.0: changelog подтягивается с GitHub Releases этого репоimage_origin:  github: ollama/ollama
 
 requirements:
   min_ram_mb: 5120        # 4GB модель + 1GB overhead на WebUI
