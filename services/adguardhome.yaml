@@ -14,7 +14,7 @@ requirements:
   cpu_cores: 1
   needs_internet: true
   needs_ports: [3000, 53]
-  optional_ports: [80, 443, 853]
+  optional_ports: [80, 853]      # :443 не используем — оставлен под 3X-UI Reality VPN
 
 description: |
   Сетевой DNS-фильтр — блокирует рекламу, трекеры, malware на уровне DNS
@@ -57,8 +57,9 @@ compose: |
         - "53:53/udp"
         - "3000:3000/tcp"        # initial setup
         - "80:80/tcp"            # admin interface after setup
-        - "443:443/tcp"          # для DoH
-        - "853:853/tcp"          # для DoT
+        - "853:853/tcp"          # DoT
+        # :443 НЕ публикуем — оставлен под 3X-UI Reality (VPN с обходом РКН).
+        # Если нужен DoH — настрой через Settings → Encryption после установки.
       volumes:
         - "{DATA}/work:/opt/adguardhome/work"
         - "{DATA}/conf:/opt/adguardhome/conf"

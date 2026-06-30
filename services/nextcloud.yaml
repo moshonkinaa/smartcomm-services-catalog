@@ -13,7 +13,7 @@ requirements:
   platforms: [x86_64]
   cpu_cores: 2
   needs_internet: false
-  needs_ports: [8080, 11000]
+  needs_ports: [8800, 11000]
   optional_ports: [3478]
 
 description: |
@@ -36,11 +36,11 @@ features:
   - Talk — видео/аудио звонки с шифрованием
   - File sharing с правами и сроком жизни ссылок
 
-web_url: "https://{CONTROLLER}:8080"
+web_url: "https://{CONTROLLER}:8800"
 docs_url: https://nextcloud.com/all-in-one/
 
 post_install: |
-  1. Открой https://CONTROLLER:8080 (HTTPS обязательно)
+  1. Открой https://CONTROLLER:8800 (HTTPS обязательно)
   2. Запиши «AIO Master Password» — это пароль для управления стэком
   3. Введи свой домен (или CONTROLLER если без публичного доступа)
   4. Запусти контейнеры через AIO интерфейс
@@ -55,7 +55,7 @@ compose: |
       container_name: nextcloud-aio-mastercontainer
       restart: always
       ports:
-        - "8080:8080"
+        - "8800:8800"
       volumes:
         - "nextcloud_aio_mastercontainer:/mnt/docker-aio-config"
         - "/var/run/docker.sock:/var/run/docker.sock:ro"

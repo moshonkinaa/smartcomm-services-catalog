@@ -85,6 +85,38 @@ compose: |
 
 Если ARM не указан — сервис не показывается на Pi.
 
+## Port map — какой сервис какой порт занимает
+
+Чтобы избежать конфликтов когда несколько сервисов установлены одновременно.
+
+| Порт | Сервис | Назначение |
+|---|---|---|
+| 53 (TCP+UDP) | AdGuard Home | DNS |
+| 80 | AdGuard Home | Admin UI после setup |
+| 443 | **3X-UI (Reality VPN)** | TLS-маскировка (НЕ занимать другими) |
+| 853 | AdGuard Home | DoT (DNS-over-TLS) |
+| 2053 | 3X-UI | Admin panel |
+| 2283 | Immich | Web UI |
+| 3000 | AdGuard Home | Initial setup wizard |
+| 3001 | Uptime Kuma | Web UI |
+| 3030 | Open WebUI (Ollama) | ChatGPT-like UI |
+| 5000, 8554, 8555 | Frigate | Web UI, RTSP, WebRTC |
+| 5678 | n8n | Web UI |
+| 7359/udp, 1900/udp | Jellyfin | Auto-discovery |
+| 8096, 8920 | Jellyfin | HTTP, HTTPS |
+| 8222 | Vaultwarden | Web UI |
+| 8800 | Nextcloud AIO | Master container (раньше :8080 — конфликт с дашбордом) |
+| 9000, 9443 | Portainer | HTTP, HTTPS |
+| 11000 | Nextcloud Apache | Web UI (внутри AIO стека) |
+| 11434 | Ollama | API |
+| 51820/udp | wg-easy | WireGuard tunnel |
+| 51821 | wg-easy | Web UI |
+
+**Зарезервировано для SmartComm-стека (не трогать)**:
+- :8080 — SmartComm Dashboard
+- :8888, :8443 — iRidium Server
+- :22 — SSH
+
 ## Лицензия
 
 CC0 — манифесты в public domain. Лицензии самих сервисов — см. их репозитории.

@@ -1,0 +1,76 @@
+schema_version: 1
+id: wg-easy
+name: WireGuard Easy
+tagline: Простой WireGuard VPN с web-UI для всей семьи
+category: vpn
+icon: shield-alt
+client_facing: true
+suspicious: true
+
+requirements:
+  min_ram_mb: 128
+  min_disk_gb: 1
+  platforms: [x86_64, arm64]
+  cpu_cores: 1
+  needs_internet: true
+  needs_ports: [51820, 51821]
+  optional_ports: []
+
+description: |
+  Классический WireGuard VPN-сервер с web-интерфейсом для управления клиентами.
+  Создаёшь конфиги в браузере, раздаёшь QR-коды семье — подключаются через
+  официальные WireGuard apps (iOS / Android / Windows / Mac / Linux).
+
+  **Когда использовать**:
+  - Загородные дома, регионы где DPI РКН не блокирует WireGuard
+  - Доступ к домашней сети из путешествия
+  - Замена коммерческого VPN с лимитами трафика
+
+  **Когда использовать [[3x-ui]] вместо**:
+  - Большие города РФ где WireGuard блокируется (нужен Reality протокол с обфускацией под TLS)
+  - Доступ к заблокированным в РФ сайтам (YouTube/Instagram/ChatGPT)
+
+  Очень лёгкий — 128 MB RAM достаточно для семьи из 10+ устройств.
+
+features:
+  - Web UI для создания клиентов в один клик
+  - QR-коды для iOS/Android (открыл камерой → подключился)
+  - Official WireGuard apps работают (не требуют отдельных клиентов)
+  - Просмотр трафика по клиенту в реальном времени
+  - Включение/отключение клиентов без перезапуска сервера
+
+docs_url: https://github.com/wg-easy/wg-easy
+web_url: "http://{CONTROLLER}:51821"
+
+post_install: |
+  1. Открой http://CONTROLLER:51821 — login с PASSWORD из compose.yml (по умолчанию `changeme123`)
+  2. **СРАЗУ смени** WG_PASSWORD в /var/lib/smartcomm-services/wg-easy/compose.yml + restart
+  3. New Client → введи имя (например «iPhone мужа») → скачай конфиг или QR
+  4. Установи WireGuard на устройство:
+     - iOS: App Store → WireGuard → Add Tunnel → Scan QR
+     - Android: Google Play → WireGuard → Add Tunnel → Scan QR
+     - Windows: wireguard.com/install → Import .conf
+  5. На роутере MikroTik пробросить **UDP/51820** на CONTROLLER:51820
+
+compose: |
+  services:
+    wg-easy:
+      image: ghcr.io/wg-easy/wg-easy:latest
+      container_name: wg-easy
+      restart: unless-stopped
+      ports:
+        - "51820:51820/udp"
+        - "51821:51821/tcp"
+      volumes:
+        - "{DATA}/data:/etc/wireguard"
+      cap_add:
+        - NET_ADMIN
+        - SYS_MODULE
+      sysctls:
+        - net.ipv4.conf.all.src_valid_mark=1
+        - net.ipv4.ip_forward=1
+      environment:
+        - "TZ=Europe/Moscow"
+        - "WG_HOST=CONTROLLER"
+        - "PASSWORD=changeme123"
+        - "WG_DEFAULT_DNS=1.1.1.1"

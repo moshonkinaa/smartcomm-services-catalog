@@ -9,7 +9,7 @@ description: |
   Расширенный пакет для активных пользователей:
   - всё из «Базового» (AdGuard, Vaultwarden, Uptime Kuma)
   - VPN с обходом блокировок РКН (3X-UI Reality)
-  - резервный VPN AmneziaWG
+  - классический WireGuard для семьи (wg-easy — web UI с QR-кодами)
   - облачное хранилище для семьи (Nextcloud — Dropbox дома)
   - no-code автоматизация (n8n)
 
@@ -21,7 +21,7 @@ services:
   - vaultwarden
   - uptime-kuma
   - 3x-ui
-  - amneziawg
+  - wg-easy
   - nextcloud
   - n8n
 

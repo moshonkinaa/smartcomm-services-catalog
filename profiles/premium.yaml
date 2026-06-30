@@ -23,7 +23,7 @@ services:
   - vaultwarden
   - uptime-kuma
   - 3x-ui
-  - amneziawg
+  - wg-easy
   - nextcloud
   - n8n
   - ollama

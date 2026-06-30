@@ -13,7 +13,7 @@ requirements:
   platforms: [x86_64]      # Pi 5 потянет 1-2B модели, но опыт слабый — не показываем
   cpu_cores: 4
   needs_internet: true     # для скачивания моделей; работа потом offline
-  needs_ports: [3000, 11434]
+  needs_ports: [3030, 11434]
   optional_ports: []
 
 description: |
@@ -37,11 +37,11 @@ features:
   - OpenAI-совместимый API — можно подключить из других приложений
   - Intel iGPU acceleration (через `--device=/dev/dri`)
 
-web_url: "http://{CONTROLLER}:3000"
+web_url: "http://{CONTROLLER}:3030"
 docs_url: https://docs.openwebui.com/
 
 post_install: |
-  1. Открой http://CONTROLLER:3000 — это Open WebUI
+  1. Открой http://CONTROLLER:3030 — это Open WebUI
   2. Создай админ-аккаунт (первый юзер автоматически админ)
   3. Settings → Models → Pull a model from Ollama:
      - `llama3.1:8b` (8GB, 4.5GB на диске) — универсальная
@@ -71,7 +71,7 @@ compose: |
       restart: unless-stopped
       depends_on: [ollama]
       ports:
-        - "3000:8080"
+        - "3030:8080"   # :3000 занят AdGuard initial-setup
       volumes:
         - "{DATA}/webui:/app/backend/data"
       environment:
